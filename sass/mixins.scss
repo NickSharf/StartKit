@@ -1,0 +1,24 @@
+@mixin container () {
+  margin: 0 auto;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 0;
+  padding-bottom: 0;
+  max-width: 620px;
+
+  @media #{$tablet-widths} {
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 0;
+    padding-bottom: 0;
+    max-width: 940px;
+  }
+
+  @media #{$desktop-widths} {
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 0;
+    padding-bottom: 0;
+    max-width: 940px;
+  }
+}

@@ -33,7 +33,7 @@ gulp.task('html:del', function() {
 });
 
 gulp.task('html',['html:del'], function() {
-  return gulp.src('html/*.html')
+  return gulp.src('*.html')
     .pipe(rigger())
     .pipe(gulp.dest('build'));
 });
@@ -64,8 +64,16 @@ gulp.task('js:del', function() {
   return del('build/js');
 });
 
+gulp.task('js:libraries', ['js:del'], function() {
+  gulp.src('js/libraries/*.js')
+    .pipe(plumber())
+    .pipe(uglify())
+    .pipe(gulp.dest('build/js/libraries'))
+    .pipe(server.stream());
+});
 
-gulp.task('js', ['js:del'], function() {
+
+gulp.task('js', ['js:libraries'], function() {
   gulp.src('js/main.js')
     .pipe(plumber())
     .pipe(rigger())
@@ -174,8 +182,8 @@ gulp.task('serve', function() {
   });
 
   gulp.watch('sass/**/*.{scss,sass}', ['style']);
-  gulp.watch('html/*.html', ['html', server.reload]);
-  gulp.watch('js/*.js', ['js', server.reload]);
+  gulp.watch('*.html', ['html', server.reload]);
+  gulp.watch('js/scripts/*.js', ['js', server.reload]);
 });
 
 // BUILD

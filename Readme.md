@@ -30,7 +30,7 @@
     </tr>
     <tr>
       <td><code>gulp deploy</code></td>
-      <td>Сборка проекта и отправка содержимого папки сборки на github-pages</td>
+      <td>Отправка содержимого папки сборки на github-pages</td>
     </tr>
   </tbody>
 </table>

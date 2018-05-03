@@ -9,8 +9,8 @@
   </thead>
   <tbody>
     <tr>
-      <td width="22%"><code>npm i</code></td>
-      <td>Установить зависимости</td>
+      <td width="12%"><code>npm i</code></td>
+      <td width="50%">Установить зависимости</td>
     </tr>
     <tr>
       <td><code>npm start</code></td>

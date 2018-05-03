@@ -169,7 +169,6 @@ gulp.task('deploy', function() {
     .pipe(ghPages());
 });
 
-
 // LIVE SERVER
 
 gulp.task('serve', function() {

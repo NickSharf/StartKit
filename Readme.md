@@ -17,8 +17,12 @@
       <td>Запустить сборку, сервер и слежение за файлами</td>
     </tr>
     <tr>
-      <td><code>npm start ЗАДАЧА</code></td>
+      <td><code>gulp ЗАДАЧА</code></td>
       <td>Запустить задачу с названием ЗАДАЧА (список задач в <code>./gulpfile.js</code>)</td>
+    </tr>
+    <tr>
+      <td><code>npm test</code></td>
+      <td>Проверка сборки на ошибки</td>
     </tr>
     <tr>
       <td><code>npm run build</code></td>

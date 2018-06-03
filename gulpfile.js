@@ -3,6 +3,7 @@
 var gulp = require('gulp');
 var sass = require('gulp-sass');
 var sassGlob = require('gulp-sass-glob');
+var sourcemaps = require('gulp-sourcemaps');
 var plumber = require('gulp-plumber');
 var postcss = require('gulp-postcss');
 var autoprefixer = require('autoprefixer');
@@ -17,7 +18,6 @@ var webp = require('gulp-webp');
 var svgmin = require('gulp-svgmin');
 var svgstore = require('gulp-svgstore');
 var rigger = require('gulp-rigger');
-var run = require('run-sequence');
 var del = require('del');
 var ghPages = require('gulp-gh-pages');
 
@@ -47,6 +47,7 @@ gulp.task('html', gulp.series('html:del', 'html:copy'));
 gulp.task('style', function (done) {
   return gulp.src('sass/main.scss')
     .pipe(plumber())
+    .pipe(sourcemaps.init())
     .pipe(sassGlob())
     .pipe(sass({
       includePaths: require("node-normalize-scss").includePaths
@@ -60,6 +61,7 @@ gulp.task('style', function (done) {
     .pipe(rename('style.css'))
     .pipe(gulp.dest('build/css'))
     .pipe(minifycss())
+    .pipe(sourcemaps.write())
     .pipe(rename('style.min.css'))
     .pipe(gulp.dest('build/css'))
     .pipe(server.stream());
@@ -82,11 +84,13 @@ gulp.task('js:libraries', function(done) {
 
 
 gulp.task('js:scripts', function(done) {
-  return gulp.src('js/main.js')
+  return gulp.src('js/scripts/*.js')
     .pipe(plumber())
-    .pipe(rigger())
+    .pipe(sourcemaps.init())
+    .pipe(concat('main.js'))
     .pipe(gulp.dest('build/js'))
     .pipe(uglify())
+    .pipe(sourcemaps.write())
     .pipe(rename('main.min.js'))
     .pipe(gulp.dest('build/js'))
     .pipe(server.stream());
@@ -218,7 +222,7 @@ gulp.task('serve', function(done) {
   gulp.watch('sass/**/*.{scss,sass}', gulp.series('style'));
   gulp.watch('*.html', gulp.series('html', 'reload'));
   gulp.watch('templates/*.html', gulp.series('html', 'reload'));
-  gulp.watch('js/scripts/*.js', gulp.series('js', 'reload'));
+  gulp.watch('js/**/*.js', gulp.series('js', 'reload'));
   done();
 });
 

@@ -22,6 +22,7 @@
     "gulp-rigger": "^0.5.8",
     "gulp-sass": "^4.0.1",
     "gulp-sass-glob": "^1.0.9",
+    "gulp-sourcemaps": "^2.6.4",
     "gulp-svgmin": "^1.2.4",
     "gulp-svgstore": "^6.1.1",
     "gulp-uglify": "^3.0.0",

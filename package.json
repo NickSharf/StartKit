@@ -27,7 +27,6 @@
     "gulp-uglify": "^3.0.0",
     "gulp-webp": "^3.0.0",
     "node-normalize-scss": "^8.0.0",
-    "run-sequence": "^2.2.1",
     "stylelint": "^9.2.0",
     "stylelint-config-htmlacademy": "^0.1.1"
   },

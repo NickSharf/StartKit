@@ -152,26 +152,26 @@ gulp.task('img:minify', function(done) {
 
 gulp.task('img', gulp.series('img:del', 'img:copy', 'img:minify'));
 
-// WEBP
+// CONTENT IMAGES
 
-gulp.task('webp:del', function(done) {
+gulp.task('content:del', function(done) {
   return del('build/img/content', done);
 });
 
-gulp.task('webp:copy', function(done) {
+gulp.task('content:copy', function(done) {
   return gulp.src('img/content/*.{png,jpg}')
     .pipe(gulp.dest('build/img/content'));
     done();
 });
 
-gulp.task('webp:convert', function(done) {
+gulp.task('content:convert', function(done) {
   return gulp.src('build/img/content/*.{png,jpg}')
     .pipe(webp({quality: 90}))
     .pipe(gulp.dest('build/img/content'));
     done();
 });
 ;
-gulp.task('webp', gulp.series('webp:del', 'webp:copy', 'webp:convert'));
+gulp.task('content', gulp.series('content:del', 'content:copy', 'content:convert'));
 
 
 // SVG-SPRITE
@@ -236,7 +236,7 @@ gulp.task('build', gulp.series('clean',
     'fonts',
     'favicons',
     'img',
-    'webp',
+    'content',
     'svg-sprite'
   )
 ));

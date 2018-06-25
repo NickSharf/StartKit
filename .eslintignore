@@ -1,2 +1,2 @@
 js/libraries/*.js
-*.js
+gulpfile.js

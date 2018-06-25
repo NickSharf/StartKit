@@ -9,6 +9,7 @@
     "browser-sync": "^2.23.7",
     "css-mqpacker": "^6.0.2",
     "del": "^3.0.0",
+    "htmlhint": "^0.9.13",
     "eslint": "^4.19.1",
     "eslint-config-htmlacademy": "^0.5.2",
     "gulp": "^4.0.0",

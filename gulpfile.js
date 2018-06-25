@@ -189,7 +189,7 @@ gulp.task('svg-sprite:copy', function(done) {
       inlineSvg: true
     }))
     .pipe(rename('sprite.svg'))
-    .pipe(gulp.dest('build/img'));
+    .pipe(gulp.dest('build/img/svg-sprite'));
     done();
 });
 

@@ -86,12 +86,13 @@ gulp.task('js:libraries', function(done) {
 gulp.task('js:scripts', function(done) {
   return gulp.src('js/scripts/*.js')
     .pipe(plumber())
+    .pipe(gulp.dest('build/js'))
     .pipe(sourcemaps.init())
-    .pipe(concat('main.js'))
+    .pipe(concat('script.js'))
     .pipe(gulp.dest('build/js'))
     .pipe(uglify())
     .pipe(sourcemaps.write())
-    .pipe(rename('main.min.js'))
+    .pipe(rename('script.min.js'))
     .pipe(gulp.dest('build/js'))
     .pipe(server.stream());
     done();

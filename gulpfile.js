@@ -7,6 +7,8 @@ var sourcemaps = require('gulp-sourcemaps');
 var plumber = require('gulp-plumber');
 var postcss = require('gulp-postcss');
 var autoprefixer = require('autoprefixer');
+var posthtml = require("gulp-posthtml");
+var include = require("posthtml-include");
 var server = require('browser-sync').create();
 var mqpacker = require('css-mqpacker');
 var minifycss = require('gulp-csso');
@@ -17,7 +19,6 @@ var imagemin = require('gulp-imagemin');
 var webp = require('gulp-webp');
 var svgmin = require('gulp-svgmin');
 var svgstore = require('gulp-svgstore');
-var rigger = require('gulp-rigger');
 var del = require('del');
 var ghPages = require('gulp-gh-pages');
 
@@ -35,7 +36,7 @@ gulp.task('html:del', function(done) {
 
 gulp.task('html:copy', function(done) {
   return gulp.src('src/*.html')
-    .pipe(rigger())
+    .pipe(posthtml([include()]))
     .pipe(gulp.dest('build'));
     done();
 });
@@ -45,7 +46,7 @@ gulp.task('html', gulp.series('html:del', 'html:copy'));
 // CSS
 
 gulp.task('style', function (done) {
-  return gulp.src('src/sass/main.scss')
+  return gulp.src('src/scss/main.scss')
     .pipe(plumber())
     .pipe(sourcemaps.init())
     .pipe(sassGlob())
@@ -73,34 +74,36 @@ gulp.task('js:del', function(done) {
   return del('build/js', done);
 });
 
-gulp.task('js:libraries', function(done) {
-  return gulp.src('src/js/libraries/*.js')
+gulp.task('js:vendor', function(done) {
+  return gulp.src('src/js/vendor/*.js')
     .pipe(plumber())
-    .pipe(concat('libraries.js'))
+    .pipe(gulp.dest('build/js/vendor'))
+    .pipe(concat('vendor.js'))
     .pipe(gulp.dest('build/js'))
     .pipe(uglify())
-    .pipe(rename('libraries.min.js'))
+    .pipe(rename('vendor.min.js'))
     .pipe(gulp.dest('build/js'))
-    .pipe(server.stream());
+    .pipe(server.stream());Е
     done();
 });
 
 
-gulp.task('js:scripts', function(done) {
-  return gulp.src('src/js/scripts/*.js')
+gulp.task('js:modules', function(done) {
+  return gulp.src('src/js/modules/*.js')
     .pipe(plumber())
+    .pipe(gulp.dest('build/js/modules'))
     .pipe(sourcemaps.init())
-    .pipe(concat('script.js'))
+    .pipe(concat('main.js'))
     .pipe(gulp.dest('build/js'))
     .pipe(uglify())
     .pipe(sourcemaps.write())
-    .pipe(rename('script.min.js'))
+    .pipe(rename('main.min.js'))
     .pipe(gulp.dest('build/js'))
     .pipe(server.stream());
     done();
 });
 
-gulp.task('js', gulp.series('js:del', 'js:libraries', 'js:scripts'));
+gulp.task('js', gulp.series('js:del', 'js:vendor', 'js:modules'));
 
 // FONTS
 
@@ -222,9 +225,9 @@ gulp.task('serve', function(done) {
     ui: false
   });
 
-  gulp.watch('src/sass/**/*.{scss,sass}', gulp.series('style'));
+  gulp.watch('src/scss/**/*.{scss,sass}', gulp.series('style'));
   gulp.watch('src/*.html', gulp.series('html', 'reload'));
-  gulp.watch('src/templates/*.html', gulp.series('html', 'reload'));
+  gulp.watch('src/components/*.html', gulp.series('html', 'reload'));
   gulp.watch('src/js/**/*.js', gulp.series('js', 'reload'));
   done();
 });

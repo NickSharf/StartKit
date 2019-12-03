@@ -20,7 +20,7 @@ var webp = require('gulp-webp');
 var svgmin = require('gulp-svgmin');
 var svgstore = require('gulp-svgstore');
 var del = require('del');
-var ghPages = require('gh-pages');
+var ghPages = require('gulp-gh-pages');
 
 // CLEAN BUILD
 
@@ -204,8 +204,9 @@ gulp.task('svg-sprite', gulp.series('svg-sprite:del', 'svg-sprite:copy'));
 //GH-PAGES
 
 gulp.task('deploy', function(done) {
-  ghPages.publish('build');
-  done();
+  return gulp.src('build/**/*')
+    .pipe(ghPages());
+    done();
 });
 
 // LIVE SERVER

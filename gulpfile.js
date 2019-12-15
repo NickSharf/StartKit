@@ -83,7 +83,7 @@ gulp.task('js:vendor', function(done) {
     .pipe(uglify())
     .pipe(rename('vendor.min.js'))
     .pipe(gulp.dest('build/js'))
-    .pipe(server.stream());Е
+    .pipe(server.stream());
     done();
 });
 

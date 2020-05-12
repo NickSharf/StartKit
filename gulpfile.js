@@ -149,7 +149,7 @@ gulp.task('img:minify', function(done) {
   return gulp.src('build/img/**/*.{png,jpg,gif,svg}')
     .pipe(imagemin([
       imagemin.optipng({optimizationLevel: 3}),
-      imagemin.jpegtran({progressive: true}),
+      imagemin.mozjpeg({progressive: true}),
       imagemin.svgo()
     ]))
     .pipe(gulp.dest('build/img'));

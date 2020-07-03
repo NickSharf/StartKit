@@ -83,7 +83,6 @@ gulp.task('js:vendor', function(done) {
     .pipe(uglify())
     .pipe(rename('vendor.min.js'))
     .pipe(gulp.dest('build/js'))
-    .pipe(server.stream());
     done();
 });
 
@@ -99,7 +98,6 @@ gulp.task('js:modules', function(done) {
     .pipe(sourcemaps.write())
     .pipe(rename('main.min.js'))
     .pipe(gulp.dest('build/js'))
-    .pipe(server.stream());
     done();
 });
 

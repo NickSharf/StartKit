@@ -1,57 +1,67 @@
 'use strict';
 
-var gulp = require('gulp');
-var sass = require('gulp-sass');
-var sassGlob = require('gulp-sass-glob');
-var sourcemaps = require('gulp-sourcemaps');
-var plumber = require('gulp-plumber');
-var postcss = require('gulp-postcss');
-var autoprefixer = require('autoprefixer');
-var posthtml = require("gulp-posthtml");
-var include = require("posthtml-include");
-var server = require('browser-sync').create();
-var mqpacker = require('css-mqpacker');
-var minifycss = require('gulp-csso');
-var concat = require('gulp-concat');
-var uglify = require('gulp-uglify');
-var rename = require('gulp-rename');
-var imagemin = require('gulp-imagemin');
-var webp = require('gulp-webp');
-var svgmin = require('gulp-svgmin');
-var svgstore = require('gulp-svgstore');
-var del = require('del');
-var ghPages = require('gh-pages');
+// Temp Node.JS 14.5.0 fix
+
+{
+    const { emitWarning } = process;
+    process.emitWarning =
+    (warning, type, code, ...extraArgs) =>
+    code !== 'DEP0097' && emitWarning(warning, type, code, ...extraArgs);
+}
+
+import gulp from 'gulp';
+import sass from 'gulp-sass';
+import sassGlob from 'gulp-sass-glob';
+import sourcemaps from 'gulp-sourcemaps';
+import plumber from 'gulp-plumber';
+import postcss from 'gulp-postcss';
+import autoprefixer from 'autoprefixer';
+import posthtml from "gulp-posthtml";
+import include from "posthtml-include";
+import mqpacker from 'css-mqpacker';
+import minifycss from 'gulp-csso';
+import concat from 'gulp-concat';
+import uglify from 'gulp-uglify';
+import rename from 'gulp-rename';
+import imagemin from 'gulp-imagemin';
+import webp from 'gulp-webp';
+import svgmin from 'gulp-svgmin';
+import svgstore from 'gulp-svgstore';
+import del from 'del';
+import ghPages from 'gh-pages';
+import browsersync from 'browser-sync';
+const server = browsersync.create();
+const {src, dest, watch, series, parallel} = gulp;
 
 // CLEAN BUILD
 
-gulp.task('clean', function(done) {
-  return del('build', done);
-});
+export const clean = () => {
+  return del('build');
+}
 
 // HTML
 
-gulp.task('html:del', function(done) {
-  return del('build/*.html', done);
-});
+const htmldel = () => {
+  return del('build/*.html');
+}
 
-gulp.task('html:copy', function(done) {
-  return gulp.src('src/*.html')
+const htmlcopy = () => {
+  return src('src/*.html')
     .pipe(posthtml([include()]))
-    .pipe(gulp.dest('build'));
-    done();
-});
+    .pipe(dest('build'));
+}
 
-gulp.task('html', gulp.series('html:del', 'html:copy'));
+export const html = series(htmldel, htmlcopy);
 
 // CSS
 
-gulp.task('style', function (done) {
-  return gulp.src('src/scss/main.scss')
+export const style = () => {
+  return src('src/scss/main.scss')
     .pipe(plumber())
     .pipe(sourcemaps.init())
     .pipe(sassGlob())
     .pipe(sass({
-      includePaths: require("node-normalize-scss").includePaths
+      includePaths: ['node_modules/normalize.css/']
     }))
     .pipe(postcss([
       autoprefixer(),
@@ -60,160 +70,146 @@ gulp.task('style', function (done) {
       })
     ]))
     .pipe(rename('style.css'))
-    .pipe(gulp.dest('build/css'))
+    .pipe(dest('build/css'))
     .pipe(minifycss())
     .pipe(sourcemaps.write())
     .pipe(rename('style.min.css'))
-    .pipe(gulp.dest('build/css'))
+    .pipe(dest('build/css'))
     .pipe(server.stream());
-    done();
-});
+}
 
 // JS
-gulp.task('js:del', function(done) {
-  return del('build/js', done);
-});
+const jsdel = () => {
+  return del('build/js');
+}
 
-gulp.task('js:vendor', function(done) {
-  return gulp.src('src/js/vendor/*.js')
+const jsvendor = () => {
+  return src('src/js/vendor/*.js')
     .pipe(plumber())
-    .pipe(gulp.dest('build/js/vendor'))
+    .pipe(dest('build/js/vendor'))
     .pipe(concat('vendor.js'))
-    .pipe(gulp.dest('build/js'))
+    .pipe(dest('build/js'))
     .pipe(uglify())
     .pipe(rename('vendor.min.js'))
-    .pipe(gulp.dest('build/js'))
-    done();
-});
+    .pipe(dest('build/js'))
+}
 
-
-gulp.task('js:modules', function(done) {
-  return gulp.src('src/js/modules/*.js')
+const jsmodules = () => {
+  return src('src/js/modules/*.js')
     .pipe(plumber())
-    .pipe(gulp.dest('build/js/modules'))
+    .pipe(dest('build/js/modules'))
     .pipe(sourcemaps.init())
     .pipe(concat('main.js'))
-    .pipe(gulp.dest('build/js'))
+    .pipe(dest('build/js'))
     .pipe(uglify())
     .pipe(sourcemaps.write())
     .pipe(rename('main.min.js'))
-    .pipe(gulp.dest('build/js'))
-    done();
-});
+    .pipe(dest('build/js'))
+}
 
-gulp.task('js', gulp.series('js:del', 'js:vendor', 'js:modules'));
-
+export const js = series(jsdel, jsvendor, jsmodules);
 // FONTS
 
-gulp.task('fonts:del', function(done) {
-  return del('build/fonts', done);
-});
+const fontsdel = () => {
+  return del('build/fonts');
+}
 
-gulp.task('fonts:copy', function(done) {
-  return gulp.src('src/fonts/**/*.{woff,woff2}')
-    .pipe(gulp.dest('build/fonts/'));
-    done();
-});
+const fontscopy = () => {
+  return src('src/fonts/**/*.{woff,woff2}')
+    .pipe(dest('build/fonts/'));
+}
 
-gulp.task('fonts', gulp.series('fonts:del', 'fonts:copy'));
+export const fonts = series(fontsdel, fontscopy);
 
 // FAVICONS
 
-gulp.task('favicons:del', function(done) {
-  return del('build/img/favicons', done);
-});
+const faviconsdel = () => {
+  return del('build/img/favicons');
+}
 
-gulp.task('favicons:copy', function(done) {
-  return gulp.src('src/img/favicons/*.{png,jpg,json,jpeg,svg}')
-    .pipe(gulp.dest('build/img/favicons/'));
-    done();
-});
+const faviconscopy = () => {
+  return src('src/img/favicons/*.{png,jpg,json,jpeg,svg}')
+    .pipe(dest('build/img/favicons/'));
+}
 
-gulp.task('favicons', gulp.series('favicons:del', 'favicons:copy'));
+export const favicons = series(faviconsdel, faviconscopy);
 
 // IMAGES
 
-gulp.task('img:del', function(done) {
-  return del('build/img/*.*', done);
-});
+const imgdel = () => {
+  return del('build/img/*.*');
+}
 
-gulp.task('img:copy', function(done) {
-  return gulp.src('src/img/*.{png,jpg,gif,svg}')
-    .pipe(gulp.dest('build/img/'));
-    done();
-});
+const imgcopy = () => {
+  return src('src/img/*.{png,jpg,gif,svg}')
+    .pipe(dest('build/img/'));
+}
 
-gulp.task('img:minify', function(done) {
-  return gulp.src('build/img/**/*.{png,jpg,gif,svg}')
+const imgminify = () => {
+  return src('build/img/**/*.{png,jpg,gif,svg}')
     .pipe(imagemin([
       imagemin.optipng({optimizationLevel: 3}),
       imagemin.mozjpeg({progressive: true}),
       imagemin.svgo()
     ]))
-    .pipe(gulp.dest('build/img'));
-    done();
-});
+    .pipe(dest('build/img'));
+}
 
-gulp.task('img', gulp.series('img:del', 'img:copy', 'img:minify'));
+export const img = series(imgdel, imgcopy, imgminify);
 
 // CONTENT IMAGES
 
-gulp.task('content:del', function(done) {
-  return del('build/img/content', done);
-});
+const contentdel = () => {
+  return del('build/img/content');
+}
 
-gulp.task('content:copy', function(done) {
-  return gulp.src('src/img/content/*.{png,jpg}')
-    .pipe(gulp.dest('build/img/content'));
-    done();
-});
+const contentcopy = () => {
+  return src('src/img/content/*.{png,jpg}')
+    .pipe(dest('build/img/content'));
+}
 
-gulp.task('content:convert', function(done) {
-  return gulp.src('build/img/content/*.{png,jpg}')
+const contentconvert = () => {
+  return src('build/img/content/*.{png,jpg}')
     .pipe(webp({quality: 90}))
-    .pipe(gulp.dest('build/img/content'));
-    done();
-});
-;
-gulp.task('content', gulp.series('content:del', 'content:copy', 'content:convert'));
+    .pipe(dest('build/img/content'));
+}
 
+export const content = series(contentdel, contentcopy, contentconvert);
 
 // SVG-SPRITE
 
-gulp.task('svg-sprite:del', function(done) {
+const svgspritedel = () => {
   return del('build/img/svg-sprite');
-  done();
-});
+}
 
-gulp.task('svg-sprite:copy', function(done) {
-  return gulp.src('src/img/svg-sprite/*.svg')
-    .pipe(gulp.dest('build/img/svg-sprite'))
+const svgspritecopy = () => {
+  return src('src/img/svg-sprite/*.svg')
+    .pipe(dest('build/img/svg-sprite'))
     .pipe(svgmin())
     .pipe(svgstore({
       inlineSvg: true
     }))
     .pipe(rename('sprite.svg'))
-    .pipe(gulp.dest('build/img/svg-sprite'));
-    done();
-});
+    .pipe(dest('build/img/svg-sprite'));
+}
 
-gulp.task('svg-sprite', gulp.series('svg-sprite:del', 'svg-sprite:copy'));
+export const svgsprite = series(svgspritedel, svgspritecopy);
 
 //GH-PAGES
 
-gulp.task('deploy', function(done) {
-  ghPages.publish('build');
-  done();
-});
+export const deploy = () => {
+  return ghPages.publish('build');
+}
+
 
 // LIVE SERVER
 
-gulp.task('reload', function(done){
+const reload = (cb) => {
   server.reload();
-  done();
-});
+  cb();
+}
 
-gulp.task('serve', function(done) {
+export const serve = (cb) => {
   server.init({
     server: 'build',
     notify: false,
@@ -222,24 +218,26 @@ gulp.task('serve', function(done) {
     ui: false
   });
 
-  gulp.watch('src/scss/**/*.{scss,sass}', gulp.series('style'));
-  gulp.watch('src/*.html', gulp.series('html', 'reload'));
-  gulp.watch('src/components/*.html', gulp.series('html', 'reload'));
-  gulp.watch('src/js/**/*.js', gulp.series('js', 'reload'));
-  done();
-});
+  watch('src/scss/**/*.{scss,sass}', series(style));
+  watch('src/*.html', series(htmldel, htmlcopy, reload));
+  watch('src/components/*.html', series(htmldel, htmlcopy, reload));
+  watch('src/js/**/*.js', series(jsdel, jsvendor, jsmodules, reload));
+  cb();
+}
 
 // BUILD
 
-gulp.task('build', gulp.series('clean',
-  gulp.series(
-    'html',
-    'style',
-    'js',
-    'fonts',
-    'favicons',
-    'img',
-    'content',
-    'svg-sprite'
-  )
-));
+export const build = series(
+  clean,
+  parallel(
+    html,
+    style,
+    js,
+    fonts,
+    favicons,
+    series(
+      series(img, svgsprite),
+      content,
+    ),
+  ),
+);

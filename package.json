@@ -7,11 +7,13 @@
     "@htmlacademy/editorconfig-cli": "^1.0.0",
     "autoprefixer": "^9.8.4",
     "browser-sync": "^2.26.7",
-    "css-mqpacker": "^7.0.0",
-    "del": "^5.1.0",
     "htmlhint": "^0.14.1",
     "eslint": "^7.4.0",
     "eslint-config-htmlacademy": "^0.5.2",
+    "stylelint": "^13.6.1",
+    "stylelint-config-htmlacademy": "^0.1.4",
+    "css-mqpacker": "^7.0.0",
+    "del": "^5.1.0",
     "gulp": "^4.0.2",
     "gulp-concat": "^2.6.1",
     "gulp-csso": "^4.0.1",
@@ -28,10 +30,7 @@
     "gulp-svgmin": "^3.0.0",
     "gulp-svgstore": "^7.0.1",
     "gulp-uglify": "^3.0.2",
-    "gulp-webp": "^4.0.1",
-    "normalize.css": "^8.0.1",
-    "stylelint": "^13.6.1",
-    "stylelint-config-htmlacademy": "^0.1.4"
+    "gulp-webp": "^4.0.1"
   },
   "scripts": {
     "editorconfig": "editorconfig-cli",
@@ -47,17 +46,17 @@
     "Firefox ESR"
   ],
   "editorconfig-cli": [
-    "*.html",
+    "src/**/*.html",
     "*.json",
     "*.js",
-    "js/**/*.js",
-    "img/**/*.svg",
-    "scss/**/*.{sass,scss}"
+    "src/js/**/*.js",
+    "src/img/**/*.svg",
+    "src/scss/**/*.{sass,scss}"
   ],
   "engines": {
     "node": "^14.0"
   },
   "dependencies": {
-    "npm-check-updates": "^7.0.1"
+    "normalize.css": "^8.0.1"
   }
 }

@@ -1,14 +1,5 @@
 'use strict';
 
-// Temp Node.JS 14.5.0 fix
-
-{
-    const { emitWarning } = process;
-    process.emitWarning =
-    (warning, type, code, ...extraArgs) =>
-    code !== 'DEP0097' && emitWarning(warning, type, code, ...extraArgs);
-}
-
 import gulp from 'gulp';
 import sass from 'gulp-sass';
 import sassGlob from 'gulp-sass-glob';

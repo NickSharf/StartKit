@@ -1,7 +1,7 @@
 'use strict';
 
 import gulp from 'gulp';
-import sass from 'gulp-sass';
+import sass from 'gulp-dart-sass';
 import sassGlob from 'gulp-sass-glob';
 import sourcemaps from 'gulp-sourcemaps';
 import plumber from 'gulp-plumber';

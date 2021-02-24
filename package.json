@@ -54,7 +54,7 @@
     "src/scss/**/*.{sass,scss}"
   ],
   "engines": {
-    "node": "^14.0"
+    "node": "^15.0.0"
   },
   "dependencies": {
     "normalize.css": "^8.0.1"

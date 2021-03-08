@@ -9,7 +9,7 @@ import postcss from 'gulp-postcss';
 import autoprefixer from 'autoprefixer';
 import posthtml from "gulp-posthtml";
 import include from "posthtml-include";
-import mqpacker from 'css-mqpacker';
+import mqpacker from 'postcss-sort-media-queries';
 import minifycss from 'gulp-csso';
 import concat from 'gulp-concat';
 import uglify from 'gulp-uglify';
@@ -57,7 +57,7 @@ export const style = () => {
     .pipe(postcss([
       autoprefixer(),
       mqpacker({
-        sort: true
+        sort: 'mobile-first'
       })
     ]))
     .pipe(rename('style.css'))

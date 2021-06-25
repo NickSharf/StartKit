@@ -51,7 +51,7 @@ export const style = () => {
     .pipe(plumber())
     .pipe(sourcemaps.init())
     .pipe(sassGlob())
-    .pipe(sass({
+    .pipe(sass.sync({
       includePaths: ['node_modules/normalize.css/']
     }))
     .pipe(postcss([

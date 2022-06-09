@@ -14,7 +14,7 @@ import minifycss from 'gulp-csso';
 import concat from 'gulp-concat';
 import uglify from 'gulp-uglify';
 import rename from 'gulp-rename';
-import imagemin from 'gulp-imagemin';
+import imagemin, {gifsicle, mozjpeg, optipng, svgo} from 'gulp-imagemin';
 import webp from 'gulp-webp';
 import svgmin from 'gulp-svgmin';
 import svgstore from 'gulp-svgstore';
@@ -139,9 +139,9 @@ const imgcopy = () => {
 const imgminify = () => {
   return src('build/img/**/*.{png,jpg,gif,svg}')
     .pipe(imagemin([
-      imagemin.optipng({optimizationLevel: 3}),
-      imagemin.mozjpeg({progressive: true}),
-      imagemin.svgo()
+      optipng({optimizationLevel: 3}),
+      mozjpeg({progressive: true}),
+      svgo()
     ]))
     .pipe(dest('build/img'));
 }
